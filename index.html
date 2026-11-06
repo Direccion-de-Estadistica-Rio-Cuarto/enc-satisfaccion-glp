@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+  <title>Encuesta de Clima Laboral 2026 · Guardia Local de Prevención — Gobierno de Río Cuarto</title>
+  <meta name="description" content="Encuesta anónima de clima laboral 2026 (FO-SGC-05-IDI.11) de la Guardia Local de Prevención, para identificar fortalezas y oportunidades de mejora.">
+  <meta name="author" content="Dir. de Estadística, Control de Calidad y Procesos — Gobierno de Río Cuarto">
+  <meta name="dcterms.modified" content="2026-11">
+  <meta name="ods" content="8, 16">
+
+  <!-- Aplica el tema guardado ANTES de pintar la página, para que no se vea
+       primero claro y después oscuro (o al revés) por un instante. No se toca. -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('tablero-tema');
+        if (t === 'claro' || t === 'oscuro') { document.documentElement.setAttribute('data-tema', t); }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- El design system compartido. No hace falta tocar estas líneas. -->
+  <link rel="stylesheet" href="css/fuentes.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/iconos.css">
+
+  <!-- Los estilos propios de ESTE tablero. Va último para poder ajustar
+       lo de arriba. Es el archivo donde escribís tu CSS. -->
+  <link rel="stylesheet" href="css/tablero.css">
+</head>
+<body>
+
+  <a class="saltar-contenido" href="#contenido">Saltar al contenido principal</a>
+
+  <!-- ================= HEADER (igual en todos los tableros) ================ -->
+  <header class="encabezado">
+    <div class="contenedor">
+      <img class="logo" src="assets/img/logo-gobierno.webp" alt="Gobierno de Río Cuarto">
+      <span class="separador" aria-hidden="true"></span>
+      <div class="titulos">
+        <h1>Sec. Gestión y Participación Ciudadana</h1>
+        <p>Dir. de Estadística, Control de Calidad y Procesos</p>
+      </div>
+
+      <!-- Interruptor de modo claro/oscuro. Igual en todos los tableros: no se toca. -->
+      <button type="button" class="boton-tema" id="boton-tema" aria-label="Cambiar entre modo claro y oscuro">
+        <svg class="icono-luna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>
+        </svg>
+        <svg class="icono-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================= CONTENIDO ================================== -->
+  <main id="contenido">
+    <div class="contenedor">
+
+      <section class="intro" aria-labelledby="titulo-encuesta">
+        <div class="intro-cabecera">
+          <div>
+            <h2 id="titulo-encuesta">Encuesta de Clima Laboral 2026</h2>
+            <p class="bajada">Guardia Local de Prevención · Gobierno de Río Cuarto</p>
+          </div>
+          <button type="button" class="boton boton--secundario boton--chico" id="boton-vista">
+            <span class="icono" aria-hidden="true" id="vista-icono">view_agenda</span>
+            <span id="vista-texto">Ver formulario completo</span>
+          </button>
+        </div>
+        <div class="intro-pildoras">
+          <p class="actualizado"><span class="icono" aria-hidden="true">description</span> Código: FO-SGC-05-IDI.11</p>
+          <p class="actualizado"><span class="icono" aria-hidden="true">verified_user</span> Anónima y confidencial</p>
+          <button type="button" class="boton boton--sutil boton--chico" id="boton-protocolo" data-abrir="modal-anonimato">
+            <span class="icono" aria-hidden="true">shield_lock</span>
+            Cómo protegemos el anonimato
+          </button>
+        </div>
+      </section>
+
+      <div class="aviso aviso--info" id="aviso-proposito" role="region" aria-label="Propósito de la encuesta">
+        <span class="icono" aria-hidden="true">info</span>
+        <div>
+          <strong>Propósito</strong>
+          <p>Esta encuesta forma parte del Sistema de Gestión de Calidad y Procesos. Su objetivo es conocer cómo percibís tu lugar de trabajo, para identificar fortalezas y oportunidades de mejora.</p>
+          <ul>
+            <li><strong>Es anónima y confidencial.</strong></li>
+            <li><strong>Tu participación es voluntaria</strong>, pero muy importante para que los resultados reflejen la realidad del área.</li>
+            <li><strong>La información será usada solo con fines de diagnóstico y mejora.</strong></li>
+          </ul>
+          <p><strong>Tu aporte es muy valioso. ¡Gracias por participar!</strong></p>
+        </div>
+      </div>
+
+      <form id="formulario-encuesta" novalidate>
+        <div class="barra-progreso-sticky">
+          <div class="progreso-info">
+            <span class="estado estado--marca texto-numero" id="progreso-porcentaje">0% completado</span>
+            <span class="progreso-bloque-actual" id="progreso-bloque" aria-live="polite"></span>
+          </div>
+          <div class="progreso-pista" id="progreso-pista" role="progressbar" aria-label="Progreso de la encuesta" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progreso-relleno" id="progreso-relleno"></div>
+          </div>
+          <div class="pestanas" id="pestanas-bloques" role="tablist" aria-label="Bloques de la encuesta"></div>
+        </div>
+
+        <!-- js/tablero.js dibuja acá los bloques de js/esquema.js -->
+        <div id="bloques"></div>
+
+        <div class="aviso aviso--grave" id="error-envio" role="alert" hidden>
+          <span class="icono" aria-hidden="true">error</span>
+          <p id="error-envio-texto"></p>
+        </div>
+
+        <div class="wizard-nav">
+          <button type="button" class="boton boton--secundario" id="boton-anterior">
+            <span class="icono" aria-hidden="true">arrow_back</span>
+            Bloque anterior
+          </button>
+          <button type="button" class="boton boton--primario" id="boton-siguiente">
+            Siguiente bloque
+            <span class="icono" aria-hidden="true">arrow_forward</span>
+          </button>
+          <button type="submit" class="boton boton--primario boton--grande" id="boton-enviar">
+            <span class="icono" aria-hidden="true">send</span>
+            <span id="boton-enviar-texto">Enviar encuesta anónima</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </main>
+
+  <div class="aviso-validacion" id="aviso-validacion" role="alert" hidden>
+    <span class="icono" aria-hidden="true">warning</span>
+    <span id="aviso-validacion-texto"></span>
+  </div>
+
+  <!-- ================= FOOTER (igual en todos los tableros) ================ -->
+  <footer class="pie">
+    <div class="contenedor">
+
+      <div class="pie-fila pie-fila--superior">
+        <div class="pie-escudos">
+          <img src="assets/img/escudo-secretaria.png" alt="Río Cuarto Gobierno — Secretaría de Gestión y Participación Ciudadana">
+          <img src="assets/img/escudo-datos.png" alt="Datos Río Cuarto">
+        </div>
+        <div class="pie-acciones">
+          <button type="button" class="boton boton--secundario boton--pildora" data-abrir="modal-ia">
+            <span class="icono" aria-hidden="true">auto_awesome</span>
+            Río Cuarto IA
+          </button>
+          <button type="button" class="boton boton--secundario boton--pildora" data-abrir="modal-ods">
+            <img src="assets/img/ods/ods-rueda.png" alt="" width="20" height="20">
+            Río Cuarto ODS
+          </button>
+        </div>
+      </div>
+
+      <div class="pie-fila pie-fila--inferior">
+        <div class="pie-textos">
+          <p><strong>Elaboración:</strong> Sec. Gestión y Participación Ciudadana · Dir. de Estadística, Control de Calidad y Procesos</p>
+          <p><strong>Fuente:</strong> Respuestas anónimas de la encuesta FO-SGC-05-IDI.11, registradas en Google Sheets mediante Google Apps Script.</p>
+        </div>
+        <nav class="enlaces-paginas" aria-label="Páginas del sitio">
+          <a href="guia-diseno.html">Sistema de diseño</a>
+        </nav>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Modal: confirmación de envío. -->
+  <dialog class="modal" id="modal-exito" aria-labelledby="modal-exito-titulo">
+    <div class="modal-cuerpo">
+      <header class="modal-cabecera">
+        <h2 id="modal-exito-titulo"><span class="icono icono--exito" aria-hidden="true">check_circle</span> ¡Muchas gracias por participar!</h2>
+        <form method="dialog"><button class="modal-cerrar" aria-label="Cerrar"><span class="icono" aria-hidden="true">close</span></button></form>
+      </header>
+      <p>Tu respuesta quedó registrada de forma anónima.</p>
+      <p>Al cerrar este mensaje, el formulario queda en blanco. Si comparten este dispositivo, otra persona ya puede responder.</p>
+      <form method="dialog"><button class="boton boton--primario">Cerrar y dejar en blanco</button></form>
+    </div>
+  </dialog>
+
+  <!-- Modal: protocolo de anonimato. -->
+  <dialog class="modal" id="modal-anonimato" aria-labelledby="modal-anonimato-titulo">
+    <div class="modal-cuerpo">
+      <header class="modal-cabecera">
+        <h2 id="modal-anonimato-titulo"><span class="icono" aria-hidden="true">shield_lock</span> Cómo protegemos el anonimato</h2>
+        <form method="dialog"><button class="modal-cerrar" aria-label="Cerrar"><span class="icono" aria-hidden="true">close</span></button></form>
+      </header>
+      <ul>
+        <li><strong>Sin datos identificatorios:</strong> no se pide nombre, DNI, legajo ni correo.</li>
+        <li><strong>Sin IP ni dispositivo:</strong> no se registra la dirección IP ni datos del navegador.</li>
+        <li><strong>Solo la fecha:</strong> se guarda el día de la respuesta, no la hora.</li>
+        <li><strong>Mínimo de 5 respuestas:</strong> no se publica ningún resultado con menos de 5 respuestas.</li>
+        <li><strong>Textos protegidos:</strong> los correos y números largos escritos en los comentarios se enmascaran antes de guardarse. Los comentarios se informan agrupados por tema.</li>
+        <li><strong>Nada queda en este dispositivo:</strong> tus respuestas no se guardan en el navegador. Si cerrás la página antes de enviar, se pierden.</li>
+      </ul>
+    </div>
+  </dialog>
+
+  <!-- Modal: cómo se construyó la encuesta con IA. -->
+  <dialog class="modal" id="modal-ia" aria-labelledby="modal-ia-titulo">
+    <div class="modal-cuerpo">
+      <header class="modal-cabecera">
+        <h2 id="modal-ia-titulo"><span class="icono" aria-hidden="true">auto_awesome</span> Río Cuarto IA</h2>
+        <form method="dialog"><button class="modal-cerrar" aria-label="Cerrar"><span class="icono" aria-hidden="true">close</span></button></form>
+      </header>
+      <h3 class="titulo-m">Declaración de uso de Inteligencia Artificial</h3>
+      <p>El desarrollo del presente trabajo contó con el apoyo de herramientas de inteligencia artificial generativa (GenAI) —proveedor: Anthropic; herramienta: Claude Code; lenguajes de programación: HTML, CSS y JavaScript; modelo: Claude Opus 5.5— para asistir en la adaptación del cuestionario al formato web, la programación del formulario, sus condicionales y validaciones, y el maquetado accesible. El diseño del cuestionario, la carga y publicación de los datos, y la validación final de los contenidos e indicadores quedaron a cargo del equipo técnico.</p>
+      <p>Los contenidos generados o asistidos por la herramienta fueron revisados, verificados y, cuando correspondió, modificados por los autores. Los autores asumen plena responsabilidad por el contenido final del trabajo.</p>
+    </div>
+  </dialog>
+
+  <!-- Modal: los ODS de este tablero. -->
+  <dialog class="modal" id="modal-ods" aria-labelledby="modal-ods-titulo">
+    <div class="modal-cuerpo">
+      <header class="modal-cabecera">
+        <h2 id="modal-ods-titulo"><img src="assets/img/ods/ods-rueda.png" alt="" width="28" height="28"> Río Cuarto ODS</h2>
+        <form method="dialog"><button class="modal-cerrar" aria-label="Cerrar"><span class="icono" aria-hidden="true">close</span></button></form>
+      </header>
+      <p>Esta encuesta contribuye al seguimiento de los siguientes Objetivos de Desarrollo Sostenible (ODS) de la Agenda 2030, en cumplimiento de la <a href="https://drive.google.com/file/d/1-JUX_knfakCrvlmDB0gHUXXLpbqkpIaY/view?usp=sharing" target="_blank" rel="noopener">Ordenanza N° 148/2021<span class="solo-lectores"> (se abre en una pestaña nueva)</span></a>:</p>
+      <ul class="ods-grilla">
+        <li><img src="assets/img/ods/ods-08.png" alt="ODS 8: Trabajo decente y crecimiento económico" width="240" height="240"></li>
+        <li><img src="assets/img/ods/ods-16.png" alt="ODS 16: Paz, justicia e instituciones sólidas" width="240" height="240"></li>
+      </ul>
+    </div>
+  </dialog>
+
+  <!-- El interruptor de tema, el cuestionario y su lógica. -->
+  <script src="js/tema.js"></script>
+  <script src="js/pie.js"></script>
+  <script src="js/esquema.js"></script>
+  <script src="js/tablero.js"></script>
+</body>
+</html>

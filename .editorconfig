@@ -1,0 +1,21 @@
+# Formato de los archivos, para que el editor de cada uno no reformatee todo
+# y ensucie los cambios. Casi todos los editores lo respetan (VS Code necesita
+# la extensión "EditorConfig for VS Code"; Antigravity y Cursor lo leen solos).
+#
+# Si abrís un archivo y el editor te lo reindenta entero al guardar, es que no
+# está tomando este archivo: instalá la extensión y volvé a abrir el proyecto.
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+# En Markdown, dos espacios al final de una línea significan "salto de línea":
+# no se pueden recortar sin cambiar cómo se ve el texto.
+trim_trailing_whitespace = false

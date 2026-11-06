@@ -1,0 +1,20 @@
+{
+  "identificador": "enc-clima-glp-2026",
+  "titulo": "Encuesta de Clima Laboral 2026 · Guardia Local de Prevención",
+  "descripcion": "Formulario anónimo para conocer cómo percibe su lugar de trabajo el personal de la Guardia Local de Prevención e identificar fortalezas y oportunidades de mejora.",
+  "fecha_creacion": "2026-11-06",
+  "tematica": "Clima laboral",
+  "autoria": ["Dir. de Estadística, Control de Calidad y Procesos"],
+  "contacto": "datos@riocuarto.gov.ar",
+  "datasets": [
+    {
+      "nombre": "Respuestas de la Encuesta de Clima Laboral 2026 (FO-SGC-05-IDI.11)",
+      "fuente": "Respuestas anónimas registradas en Google Sheets mediante Google Apps Script",
+      "periodo": "2026",
+      "actualizacion": "manual"
+    }
+  ],
+  "sensibilidad": "bajo",
+  "ods": [8, 16],
+  "modo_datos": "api"
+}

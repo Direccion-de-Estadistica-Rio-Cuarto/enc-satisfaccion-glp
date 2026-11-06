@@ -1,0 +1,23 @@
+# Finales de línea: en Windows, Git convierte por defecto los archivos a CRLF al descargarlos.
+# Eso rompe `bash scripts/revisar-tablero.sh` y cambia los bytes de los archivos protegidos por
+# hash (scripts/sistema.sha256), así que el revisor diría que "fueron modificados". Se fija LF
+# para todos, sin importar el sistema ni la configuración de Git de cada uno.
+* text=auto eol=lf
+
+# Las librerías de terceros se guardan tal cual vinieron (su hash está en sistema.sha256):
+# sin ninguna conversión. (leaflet.css, por ejemplo, viene con CRLF.)
+js/vendor/** -text
+
+# Binarios: nunca se tocan.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.pdf binary

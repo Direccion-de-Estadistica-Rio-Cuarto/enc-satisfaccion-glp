@@ -1,0 +1,38 @@
+# === LO MÁS IMPORTANTE: nada de esto se sube nunca al repositorio ===========
+
+# Datos crudos (los que pueden tener información de personas). Trabajás sobre
+# ellos en tu máquina y subís SOLO el resultado agregado a datos/.
+# (El instructivo datos-fuente/LEEME.md sí se sube, para que la carpeta exista.)
+datos-fuente/*
+!datos-fuente/LEEME.md
+*.xlsx
+*.xls
+
+# Credenciales: si un script local necesita una clave, va en un .env que se
+# queda en tu computadora y jamás se commitea.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+credenciales*.json
+secretos*.json
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+.vscode/
+.idea/
+*.swp
+
+# Por si algún script usa Python o Node
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+
+# Solo para desarrollo
+/design

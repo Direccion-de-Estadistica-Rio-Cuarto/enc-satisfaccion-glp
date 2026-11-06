@@ -1,0 +1,49 @@
+# Configuración de gitleaks — el detector de claves/secretos filtrados.
+# Extiende las reglas por defecto (que ya cubren AWS, Google, GitHub, Stripe,
+# claves privadas, JWT, etc.) y agrega algunas propias del contexto del equipo.
+
+[extend]
+useDefault = true
+
+# --- Reglas extra ----------------------------------------------------------
+
+[[rules]]
+id = "supabase-service-role"
+description = "Clave service_role de Supabase (NUNCA va en el navegador)"
+regex = '''(?i)(service_role|sb_secret)[a-z0-9_\-]*\s*[:=]\s*['\"]?eyJ[A-Za-z0-9_\-\.]{20,}'''
+tags = ["supabase", "clave"]
+
+[[rules]]
+id = "cadena-conexion-postgres"
+description = "Cadena de conexión con usuario y contraseña"
+regex = '''(?i)(postgres(ql)?|mysql|mongodb(\+srv)?)://[^:\s]+:[^@\s]+@'''
+tags = ["base-de-datos", "clave"]
+
+[[rules]]
+id = "clave-generica-asignada"
+description = "Una contraseña/clave/token asignada como texto en el código"
+regex = '''(?i)(password|passwd|contrasena|contraseña|clave|secret|token|api[_\-]?key)\s*[:=]\s*['\"][^'\"\s]{8,}['\"]'''
+tags = ["clave"]
+
+# Excepción puntual: en js/tema.js, `const CLAVE = 'tablero-tema'` es el NOMBRE con el que
+# se guarda el modo claro/oscuro en el navegador (localStorage), no una contraseña. Se
+# acota a esa línea exacta; cualquier otra "clave = '…'" sigue siendo un hallazgo.
+[rules.allowlist]
+description = "Nombre de la clave de localStorage del tema (no es un secreto)"
+regexTarget = "line"
+regexes = ['''(?i)\bCLAVE\s*=\s*['"]tablero-tema['"]''']
+
+# --- Qué ignorar (para no dar falsas alarmas) ------------------------------
+
+[allowlist]
+description = "Rutas y ejemplos que no son secretos reales"
+paths = [
+  '''vendor/.*''',            # librerías de terceros
+  '''.*\.min\.js''',          # archivos minificados
+  '''SECURITY\.md''',         # el propio doc de seguridad muestra ejemplos
+  '''\.gitleaks\.toml''',     # este mismo archivo tiene patrones de ejemplo
+]
+# Palabras que aparecen en ejemplos y no son claves reales.
+regexes = [
+  '''(?i)(tu[_\-]?clave|tu[_\-]?token|reemplaza|ejemplo|placeholder|xxxx+)''',
+]
