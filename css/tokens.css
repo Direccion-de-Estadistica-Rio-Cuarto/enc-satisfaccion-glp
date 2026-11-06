@@ -1,0 +1,169 @@
+/* ==========================================================================
+   tokens.css — La paleta y la tipografía del tablero, en un solo lugar.
+
+   TODO el color y la tipografía se declaran acá como variables. Para cambiar
+   el aspecto del tablero, tocá SOLO los valores de este archivo. No busques
+   colores sueltos por el resto del proyecto: no hay ninguno.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* --- Superficies y texto ------------------------------------------------
+    fondo = la página · superficie = tarjetas y paneles · borde = líneas
+    divisorias · texto = principal · texto-suave = subtítulos, notas, ejes */
+  --fondo: #f4f3f0;
+  --superficie: #ffffff;
+  --borde: #e2e1dc;
+  --texto: #14140f;
+  --texto-suave: #57564f;
+
+  /* --- Colores de marca (header / footer) ---------------------------------
+    Paleta oficial del Gobierno de Río Cuarto (riocuarto.gob.ar). --marca es
+    el celeste oficial tal cual, para FONDOS (header, botón primario).
+    --marca-enlace es una versión más oscura, solo para cuando el celeste se
+    usa COMO TEXTO (links, .boton--sutil) — el oficial no tiene contraste
+    suficiente para eso. Ver ACCESIBILIDAD.md. */
+  --marca: #009de0;                /* celeste institucional, para fondos */
+  --marca-texto: #ffffff;          /* texto/ícono sobre --marca */
+  --marca-enlace: #007eb3;         /* celeste, para cuando ES el texto (links) */
+
+  /* --- Colores de serie para los gráficos ---------------------------------
+    Basados en la paleta oficial (celeste, naranja, verde, rosa). Usalos
+    SIEMPRE en orden (serie-1, luego serie-2, etc.). Los primeros cuatro son
+    los colores de marca; el resto se sumaron para que sigan distinguiéndose
+    entre sí. No agregues colores nuevos: si necesitás más de 8 series, el
+    gráfico es demasiado denso y conviene repensarlo. */
+  --serie-1: #009de0;   /* celeste (marca) */
+  --serie-2: #eb6e22;   /* naranja — oscurecido: el oficial no pasa 3:1 sobre blanco */
+  --serie-3: #00a85a;   /* verde (marca) */
+  --serie-4: #ff3cb2;   /* rosa (marca) */
+  --serie-5: #6a4cff;   /* violeta */
+  --serie-6: #b88b04;   /* amarillo — oscurecido: el oficial no pasa 3:1 sobre blanco */
+  --serie-7: #0a6079;   /* petróleo */
+  --serie-8: #e23b3b;   /* rojo */
+
+  /* --- Estados (reservados: NO los uses como color de serie) ---------------
+    Los colores reales (verde/amarillo/rojo), sin oscurecer: importa que se
+    reconozcan de un vistazo (un warning tiene que verse amarillo, no
+    marrón). En .estado--* van al fondo y al punto, nunca al texto — el
+    texto es el neutro del tema. Ver ACCESIBILIDAD.md. */
+  --ok: #008300;
+  --alerta: #eda100;
+  --grave: #d14342;                /* mismo valor que usa .boton--peligro */
+
+  /* --- Tipografía, espaciado y formas -------------------------------------
+    Google Sans (declarada en css/fuentes.css). Si por algún motivo no llega
+    a cargar, el navegador sigue con la tipografía del sistema — el tablero
+    no se rompe. */
+  --fuente: 'Google Sans', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radio: 12px;
+  --espacio: 16px;
+  --ancho-max: 1120px;
+
+  /* Los escudos del footer son gris oscuro sobre transparente: en modo oscuro
+    se aclaran con este filtro para que no desaparezcan sobre el fondo. */
+  --filtro-escudo: none;
+  /* El mapa base (Argenmap) se muestra en escala de grises, para que lo único con color
+    sean los datos que se dibujan encima (sectores, rampa). En modo oscuro, además, se
+    atenúa. Es un filtro del navegador: los mosaicos guardados siguen siendo los de color,
+    y volver a color es poner "none" (claro) y quitar grayscale(1) (oscuro). */
+  --filtro-mapa: grayscale(1);
+  /* Mismo mapa base pero en color (casilla "Mapa base en color" del mapa). */
+  --filtro-mapa-color: none;
+
+  /* Color de acento para acciones que se destacan del resto (hoy: el botón
+    .boton--mapa). Es un magenta saturado, del mismo matiz que el rosa de
+    --serie-4 pero un poco más profundo: con texto blanco da 4.5:1 (AA), cosa
+    que el rosa puro no logra (3.2:1). Igual en claro y oscuro (≥3.8:1 contra
+    las superficies de los dos temas). */
+  --acento: #d9209a;
+  --acento-texto: #ffffff;
+
+  /* Alto común de los controles (botones, select, input): así una barra de
+    filtros queda toda a la misma altura y alineada. Solo se aparta de esto un
+    botón que elija ser más grande (.boton--grande) o más chico (.boton--chico). */
+  --alto-control: 44px;
+
+  /* Flecha de los <select>, con el color del texto del tema (en una imagen no
+    se puede usar var(), por eso hay una por tema). */
+  --flecha-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2314140f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   Modo oscuro — los mismos roles, con valores pensados para fondo oscuro.
+
+   Se activa de DOS formas, que conviven:
+   1. Automática: si el sistema del visitante está en oscuro y no eligió nada
+    a mano (bloque @media de abajo, con :not([data-tema="claro"])).
+   2. Manual: el botón del header (js/tema.js) fuerza data-tema="oscuro" o
+    "claro" en el <html> y lo guarda, sin importar el sistema operativo.
+
+   Los dos bloques repiten los mismos valores a propósito (no hay forma de
+   compartirlos en CSS puro): si cambiás un color acá abajo, cambialo en los
+   dos.
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    color-scheme: dark;
+    --fondo: #121211;
+    --superficie: #1b1b19;
+    --borde: #37372f;
+    --texto: #f6f6f2;
+    --texto-suave: #b9b8ad;
+
+    --marca: #0a86bd;         /* celeste institucional, más profundo para fondo oscuro */
+    --marca-texto: #ffffff;
+    --marca-enlace: #148bc0;
+
+    --serie-1: #35b4ea;
+    --serie-2: #ff8f4d;
+    --serie-3: #1fc47c;
+    --serie-4: #ff63c4;
+    --serie-5: #9585ff;
+    --serie-6: #ffca3a;
+    --serie-7: #4fa6bf;
+    --serie-8: #ef6a6a;
+
+    --filtro-escudo: brightness(0) invert(0.78);
+    --filtro-mapa: grayscale(1) brightness(0.62) contrast(1.1);
+    --filtro-mapa-color: brightness(0.62) contrast(1.1) saturate(0.8);
+    --flecha-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f6f6f2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+    /* --ok / --alerta / --grave: mismo valor que en modo claro. El tinte
+      del fondo se calcula con color-mix sobre la superficie del tema, así
+      que se adaptan solos — no hace falta redeclararlos acá. */
+  }
+}
+
+:root[data-tema="oscuro"] {
+  color-scheme: dark;
+  --fondo: #121211;
+  --superficie: #1b1b19;
+  --borde: #37372f;
+  --texto: #f6f6f2;
+  --texto-suave: #b9b8ad;
+
+  --marca: #0a86bd;
+  --marca-texto: #ffffff;
+  --marca-enlace: #148bc0;
+
+  --serie-1: #35b4ea;
+  --serie-2: #ff8f4d;
+  --serie-3: #1fc47c;
+  --serie-4: #ff63c4;
+  --serie-5: #9585ff;
+  --serie-6: #ffca3a;
+  --serie-7: #4fa6bf;
+  --serie-8: #ef6a6a;
+
+  --filtro-escudo: brightness(0) invert(0.78);
+  --filtro-mapa: grayscale(1) brightness(0.62) contrast(1.1);
+  --filtro-mapa-color: brightness(0.62) contrast(1.1) saturate(0.8);
+  --flecha-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f6f6f2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  /* --ok / --alerta / --grave: mismo valor que en modo claro. El tinte del
+    fondo se calcula con color-mix sobre la superficie del tema, así que se
+    adaptan solos. */
+}

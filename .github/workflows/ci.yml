@@ -1,0 +1,78 @@
+name: Revisar tablero
+
+# Corre solo, en GitHub, cada vez que alguien sube algo o abre un Pull Request.
+# Si algo falla, el cambio queda marcado en rojo y no debería publicarse hasta
+# arreglarlo. El equipo no ejecuta nada a mano.
+#
+# Dos jobs, independientes:
+#   1) secretos  — escaneo de claves (gitleaks). Control de seguridad de base,
+#                  ya existía; no es parte de la unificación visual.
+#   2) reglas    — bash scripts/revisar-tablero.sh: unificación visual
+#                  (header/footer iguales, design system, metadata, accesibilidad).
+#                  Lo mismo se puede correr local antes de commitear.
+#
+# Qué revisa el job 2 (y qué queda a criterio de una persona): CHECKLIST.md
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+
+  # ---------------------------------------------------------------------------
+  # 1) SEGURIDAD (de base, no toca la unificación visual): busca claves y
+  #    secretos filtrados, incluso en el historial de git.
+  # ---------------------------------------------------------------------------
+  secretos:
+    name: Escaneo de claves (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código (con todo el historial)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Se corre gitleaks directamente (herramienta libre) en vez de la acción
+      # oficial, que pide una licencia paga para repos de organizaciones: así
+      # cada repo que nazca de esta plantilla funciona sin configurar nada.
+      # La versión está fijada y el archivo se verifica por hash antes de usarlo
+      # (hash publicado por GitHub para ese release). Para actualizar: cambiar
+      # VERSION y SHA256 juntos.
+      - name: Instalar gitleaks (versión fija, verificada por hash)
+        env:
+          VERSION: "8.30.1"
+          SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/gitleaks.tar.gz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz"
+          echo "${SHA256}  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
+
+      - name: Buscar secretos (todo el historial)
+        run: |
+          "$RUNNER_TEMP/gitleaks" git . \
+            --config .gitleaks.toml \
+            --redact --verbose --no-banner
+
+  # ---------------------------------------------------------------------------
+  # 2) UNIFICACIÓN VISUAL: lo mecanizable de CHECKLIST.md, en un script.
+  # ---------------------------------------------------------------------------
+  reglas:
+    name: Unificación visual (scripts/revisar-tablero.sh)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ubuntu-latest ya trae bash, grep y shasum — no hace falta instalar nada.
+      # REPO_PRIVADO le dice al revisor si el repo es privado: en un repo público no se
+      # aceptan excepciones por datos personales (quedarían expuestos para siempre).
+      - name: Correr los controles
+        env:
+          REPO_PRIVADO: ${{ github.event.repository.private }}
+        run: bash scripts/revisar-tablero.sh
